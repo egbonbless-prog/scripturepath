@@ -1,0 +1,288 @@
+{
+  "projectId": "f6c6d8e0-8f9b-4e4b-bad9-1d394e46624d",
+  "commands": [
+    {
+      "command": "/ask",
+      "description": "Answers a Bible study question from built-in lesson content.",
+      "usage": "/ask <question>",
+      "examples": [
+        "User: /ask What does grace mean? → Bot: Relevant passage, short answer, explanation, and application."
+      ],
+      "notes": "This first version uses curated internal content, not an external AI model."
+    },
+    {
+      "command": "/bookmarks",
+      "description": "Lists or adds bookmarks.",
+      "usage": "/bookmarks or /bookmarks add <reference> | <note>",
+      "examples": [
+        "User: /bookmarks → Bot: Recent bookmarks.",
+        "User: /bookmarks add John 3:16 | God's love → Bot: Bookmark saved."
+      ],
+      "notes": ""
+    },
+    {
+      "command": "/books",
+      "description": "Lists available book summaries or shows a specific book summary.",
+      "usage": "/books [book name]",
+      "examples": [
+        "User: /books → Bot: Available book summaries.",
+        "User: /books John → Bot: John summary, themes, and key passages."
+      ],
+      "notes": ""
+    },
+    {
+      "command": "/daily",
+      "description": "Sends today's guided Bible lesson.",
+      "usage": "/daily",
+      "examples": [
+        "User: /daily → Bot: Passage, scripture focus, explanation, application, reflection, and action buttons."
+      ],
+      "notes": ""
+    },
+    {
+      "command": "/help",
+      "description": "Shows all public commands and usage hints.",
+      "usage": "/help",
+      "examples": [
+        "User: /help → Bot: ScripturePath commands list."
+      ],
+      "notes": ""
+    },
+    {
+      "command": "/plan",
+      "description": "Choose or continue a structured reading plan.",
+      "usage": "/plan",
+      "examples": [
+        "User: /plan → Bot: Reading plan choices or current day assignment."
+      ],
+      "notes": ""
+    },
+    {
+      "command": "/privacy",
+      "description": "Explains what data ScripturePath stores.",
+      "usage": "/privacy",
+      "examples": [
+        "User: /privacy → Bot: Privacy summary."
+      ],
+      "notes": ""
+    },
+    {
+      "command": "/quiz",
+      "description": "Starts a short Bible quiz.",
+      "usage": "/quiz",
+      "examples": [
+        "User: /quiz → Bot: Quiz question with answer buttons."
+      ],
+      "notes": "Scores are saved when MongoDB is configured, or in memory for local fallback."
+    },
+    {
+      "command": "/reminder",
+      "description": "Sets or disables a daily study reminder.",
+      "usage": "/reminder HH:MM or /reminder off",
+      "examples": [
+        "User: /reminder 08:00 → Bot: Daily reminder set for 08:00.",
+        "User: /reminder off → Bot: Daily reminders are off."
+      ],
+      "notes": "The first version uses server local time."
+    },
+    {
+      "command": "/resetdata",
+      "description": "Deletes saved user data after confirmation.",
+      "usage": "/resetdata",
+      "examples": [
+        "User: /resetdata → Bot: Confirmation button to delete data."
+      ],
+      "notes": "Deletes progress, bookmarks, reminders, quiz history, and study memory."
+    },
+    {
+      "command": "/start",
+      "description": "Starts ScripturePath onboarding and quick-start actions.",
+      "usage": "/start",
+      "examples": [
+        "User: /start → Bot: Welcome message with learning level and study buttons."
+      ],
+      "notes": "Also saves the user's basic Telegram profile for progress tracking."
+    },
+    {
+      "command": "/topics",
+      "description": "Shows Bible study topic buttons.",
+      "usage": "/topics",
+      "examples": [
+        "User: /topics → Bot: Faith, Prayer, Jesus, Wisdom, Forgiveness, and other topic buttons."
+      ],
+      "notes": ""
+    }
+  ],
+  "aiMessages": [
+    {
+      "role": "user",
+      "content": "create a bot for me that teaches me about the bible"
+    },
+    {
+      "role": "assistant",
+      "content": "Built ScripturePath as a complete Telegram Bible study bot with lessons, plans, quizzes, bookmarks, reminders, persistence, docs, and safe polling.\n\nFiles touched (30): .env.sample, DOCS.md, README.md, package.json, src/bot.js, src/commands/ask.js…\nValidation: ✅ project passes syntax/basic checks after this edit."
+    }
+  ],
+  "createdBy": "6a8c4dabf568e440f244592a",
+  "source": "ai-cold-start",
+  "description": "",
+  "platform": "telegram",
+  "usesWebApp": false,
+  "telegramKind": "bot",
+  "planMarkdown": "Bot: ScripturePath\n\nSummary:\nScripturePath is a Telegram learning bot that helps users study the Bible through guided lessons, daily devotionals, scripture explanations, quizzes, reading plans, and personal progress tracking.\n\nProduct goals:\nHelp users learn the Bible in an approachable, structured way. Support beginners and returning readers with daily study prompts, book-by-book summaries, chapter explanations, key themes, historical context, quizzes, and guided reading plans. Encourage consistency through reminders, progress tracking, and personalized lesson recommendations. Keep the tone educational, respectful, and non-denominational by default, with clear separation between scripture text, interpretation, and application.\n\nHigh-level architecture:\nBuild as a single Node.js ESM service using grammY. The service initializes one bot from TELEGRAMBOTTOKEN, registers command handlers, callback query handlers, session middleware, and error handling. Use a layered structure: bot entrypoint, command handlers, lesson service, Bible content service, quiz service, reminder service, user progress service, and persistence layer. MongoDB is optional but recommended for storing users, preferences, reading progress, quiz scores, reminders, bookmarks, and lesson history. Bible lesson content can be stored as structured JSON files in the application repository for the first version, then moved to MongoDB or object/filesystem storage if editorial workflows grow. Use grammY inline keyboards for lesson navigation, quiz answers, reading plan choices, and bookmark actions. A lightweight in-process scheduler can handle daily reminders because the service runs as a single process; persisted reminder settings allow recovery after restarts. Avoid introducing queues or external messaging infrastructure.\n\nData model:\nRecommended MongoDB collections: users, lessons, readingPlans, progress, bookmarks, quizAttempts, reminders, and feedback. users stores telegramUserId, username, firstName, timezone, preferredBibleVersion, learningLevel, denominationalPreference if later supported, createdAt, and updatedAt. lessons stores lessonId, title, category, Bible book, chapter range, difficulty, summary, keyVerses, content blocks, reflection questions, quiz references, and tags. readingPlans stores planId, title, durationDays, description, daily assignments, and difficulty. progress stores telegramUserId, completedLessons, activePlanId, currentPlanDay, completedReadings, streakCount, lastActivityAt, and quiz stats. bookmarks stores telegramUserId, verseReference, note, lessonId, and createdAt. quizAttempts stores telegramUserId, quizId, answers, score, completedAt. reminders stores telegramUserId, enabled, timeLocal, timezone, frequency, and lastSentAt. feedback stores telegramUserId, message, relatedLessonId, createdAt, and status.\n\nKey flows:\nOnboarding: user starts with /start, receives a short explanation, selects experience level, preferred study style, reminder preference, and optional reading plan. Daily learning: /daily returns a devotional-style lesson with passage, explanation, application, reflection question, and navigation buttons. Topic study: /topics shows categories such as Faith, Prayer, Jesus, Wisdom, Forgiveness, Old Testament, New Testament, and Parables. Book study: /books lets the user choose a Bible book and receive summaries, chapter guides, and key themes. Reading plan: /plan allows choosing or changing a structured plan; progress is saved after each completed day. Quiz flow: after a lesson, the user can take a short quiz with inline buttons; score and explanations are saved. Ask flow: /ask accepts a Bible-related question and responds using curated internal lesson content first; if AI is later added, responses should include guardrails, cite relevant passages, and avoid presenting contested interpretations as absolute fact. Bookmark flow: users can save verses or lessons and retrieve them with /bookmarks. Reminder flow: user sets a local time; scheduler checks due reminders and sends the next lesson or reading assignment.\n\nTech stack:\nRuntime: Node.js with ESM. Telegram framework: grammY. Configuration: environment variables, including TELEGRAMBOTTOKEN and MongoDB connection settings if persistence is enabled. Persistence: MongoDB for user profiles, progress, bookmarks, quizzes, reminders, and editable lesson metadata. Content: structured JSON, Markdown-like content blocks, MongoDB documents, or generic object/filesystem storage for larger lesson assets. Scheduling: in-process interval-based scheduler backed by MongoDB reminder records. Logging: structured application logs with request/update identifiers. Testing: unit tests for services, handler tests with mocked grammY context, and integration tests for persistence. Deployment: one long-running Node.js service process using either long polling for simple deployments or webhooks when an HTTPS endpoint is available.\n\nNon-functional requirements:\nSecurity: read TELEGRAMBOTTOKEN only from environment variables, never commit secrets, validate user input, and avoid logging private messages unnecessarily. Reliability: centralized error handling, graceful shutdown, MongoDB reconnect handling, idempotent reminder sending, and safe fallback messages when content is unavailable. Privacy: store only necessary Telegram profile fields and user learning data; provide /privacy and /resetdata commands. Performance: cache static Bible content and lesson indexes in memory, paginate long lists, and split long responses to respect Telegram message limits. Content quality: mark devotional/application sections separately from direct biblical text and cite references consistently. Maintainability: keep handlers thin and business logic in services; design content schemas so new lessons and plans can be added without changing bot code. Scalability: suitable for a single service process; MongoDB indexes on telegramUserId, lessonId, activePlanId, and reminder schedule fields.\n\nBot commands:\n\n",
+  "planSections": {
+    "productGoals": "Help users learn the Bible in an approachable, structured way. Support beginners and returning readers with daily study prompts, book-by-book summaries, chapter explanations, key themes, historical context, quizzes, and guided reading plans. Encourage consistency through reminders, progress tracking, and personalized lesson recommendations. Keep the tone educational, respectful, and non-denominational by default, with clear separation between scripture text, interpretation, and application.",
+    "highLevelArchitecture": "Build as a single Node.js ESM service using grammY. The service initializes one bot from TELEGRAMBOTTOKEN, registers command handlers, callback query handlers, session middleware, and error handling. Use a layered structure: bot entrypoint, command handlers, lesson service, Bible content service, quiz service, reminder service, user progress service, and persistence layer. MongoDB is optional but recommended for storing users, preferences, reading progress, quiz scores, reminders, bookmarks, and lesson history. Bible lesson content can be stored as structured JSON files in the application repository for the first version, then moved to MongoDB or object/filesystem storage if editorial workflows grow. Use grammY inline keyboards for lesson navigation, quiz answers, reading plan choices, and bookmark actions. A lightweight in-process scheduler can handle daily reminders because the service runs as a single process; persisted reminder settings allow recovery after restarts. Avoid introducing queues or external messaging infrastructure.",
+    "dataModel": "Recommended MongoDB collections: users, lessons, readingPlans, progress, bookmarks, quizAttempts, reminders, and feedback. users stores telegramUserId, username, firstName, timezone, preferredBibleVersion, learningLevel, denominationalPreference if later supported, createdAt, and updatedAt. lessons stores lessonId, title, category, Bible book, chapter range, difficulty, summary, keyVerses, content blocks, reflection questions, quiz references, and tags. readingPlans stores planId, title, durationDays, description, daily assignments, and difficulty. progress stores telegramUserId, completedLessons, activePlanId, currentPlanDay, completedReadings, streakCount, lastActivityAt, and quiz stats. bookmarks stores telegramUserId, verseReference, note, lessonId, and createdAt. quizAttempts stores telegramUserId, quizId, answers, score, completedAt. reminders stores telegramUserId, enabled, timeLocal, timezone, frequency, and lastSentAt. feedback stores telegramUserId, message, relatedLessonId, createdAt, and status.",
+    "keyFlows": "Onboarding: user starts with /start, receives a short explanation, selects experience level, preferred study style, reminder preference, and optional reading plan. Daily learning: /daily returns a devotional-style lesson with passage, explanation, application, reflection question, and navigation buttons. Topic study: /topics shows categories such as Faith, Prayer, Jesus, Wisdom, Forgiveness, Old Testament, New Testament, and Parables. Book study: /books lets the user choose a Bible book and receive summaries, chapter guides, and key themes. Reading plan: /plan allows choosing or changing a structured plan; progress is saved after each completed day. Quiz flow: after a lesson, the user can take a short quiz with inline buttons; score and explanations are saved. Ask flow: /ask accepts a Bible-related question and responds using curated internal lesson content first; if AI is later added, responses should include guardrails, cite relevant passages, and avoid presenting contested interpretations as absolute fact. Bookmark flow: users can save verses or lessons and retrieve them with /bookmarks. Reminder flow: user sets a local time; scheduler checks due reminders and sends the next lesson or reading assignment.",
+    "techStack": "Runtime: Node.js with ESM. Telegram framework: grammY. Configuration: environment variables, including TELEGRAMBOTTOKEN and MongoDB connection settings if persistence is enabled. Persistence: MongoDB for user profiles, progress, bookmarks, quizzes, reminders, and editable lesson metadata. Content: structured JSON, Markdown-like content blocks, MongoDB documents, or generic object/filesystem storage for larger lesson assets. Scheduling: in-process interval-based scheduler backed by MongoDB reminder records. Logging: structured application logs with request/update identifiers. Testing: unit tests for services, handler tests with mocked grammY context, and integration tests for persistence. Deployment: one long-running Node.js service process using either long polling for simple deployments or webhooks when an HTTPS endpoint is available.",
+    "nonFunctional": "Security: read TELEGRAMBOTTOKEN only from environment variables, never commit secrets, validate user input, and avoid logging private messages unnecessarily. Reliability: centralized error handling, graceful shutdown, MongoDB reconnect handling, idempotent reminder sending, and safe fallback messages when content is unavailable. Privacy: store only necessary Telegram profile fields and user learning data; provide /privacy and /resetdata commands. Performance: cache static Bible content and lesson indexes in memory, paginate long lists, and split long responses to respect Telegram message limits. Content quality: mark devotional/application sections separately from direct biblical text and cite references consistently. Maintainability: keep handlers thin and business logic in services; design content schemas so new lessons and plans can be added without changing bot code. Scalability: suitable for a single service process; MongoDB indexes on telegramUserId, lessonId, activePlanId, and reminder schedule fields."
+  },
+  "planCommands": [],
+  "envVarDocs": [
+    {
+      "key": "TELEGRAM_BOT_TOKEN",
+      "title": "Telegram Bot Token",
+      "description": "Authenticates the Telegram bot with the Telegram Bot API.",
+      "usage": "Read in src/lib/config.js and required during startup in src/index.js.",
+      "howToGet": "Create a bot with BotFather on Telegram and copy the token.",
+      "example": "123456789:ABCdefExampleOnly",
+      "isSecret": true,
+      "required": true
+    },
+    {
+      "key": "MONGODB_URI",
+      "title": "MongoDB URI",
+      "description": "Stores persistent user profiles, progress, bookmarks, quiz attempts, reminders, and study memory.",
+      "usage": "Read in src/lib/config.js and used by src/lib/db.js. If missing, the bot safely falls back to in-memory storage.",
+      "howToGet": "Use a MongoDB Atlas connection string or another MongoDB deployment.",
+      "example": "mongodb+srv://user:password@cluster.example/database",
+      "isSecret": true,
+      "required": false
+    },
+    {
+      "key": "REMINDER_CHECK_MS",
+      "title": "Reminder Check Interval",
+      "description": "Controls how often the in-process reminder scheduler checks for due reminders.",
+      "usage": "Read in src/lib/config.js and used by src/services/reminderService.js.",
+      "howToGet": "Set a millisecond value if you want to override the default.",
+      "example": "60000",
+      "isSecret": false,
+      "required": false
+    }
+  ],
+  "commandDocs": [
+    {
+      "command": "/start",
+      "description": "Starts ScripturePath onboarding and quick-start actions.",
+      "usage": "/start",
+      "examples": [
+        "User: /start → Bot: Welcome message with learning level and study buttons."
+      ],
+      "notes": "Also saves the user's basic Telegram profile for progress tracking."
+    },
+    {
+      "command": "/help",
+      "description": "Shows all public commands and usage hints.",
+      "usage": "/help",
+      "examples": [
+        "User: /help → Bot: ScripturePath commands list."
+      ],
+      "notes": ""
+    },
+    {
+      "command": "/daily",
+      "description": "Sends today's guided Bible lesson.",
+      "usage": "/daily",
+      "examples": [
+        "User: /daily → Bot: Passage, scripture focus, explanation, application, reflection, and action buttons."
+      ],
+      "notes": ""
+    },
+    {
+      "command": "/topics",
+      "description": "Shows Bible study topic buttons.",
+      "usage": "/topics",
+      "examples": [
+        "User: /topics → Bot: Faith, Prayer, Jesus, Wisdom, Forgiveness, and other topic buttons."
+      ],
+      "notes": ""
+    },
+    {
+      "command": "/books",
+      "description": "Lists available book summaries or shows a specific book summary.",
+      "usage": "/books [book name]",
+      "examples": [
+        "User: /books → Bot: Available book summaries.",
+        "User: /books John → Bot: John summary, themes, and key passages."
+      ],
+      "notes": ""
+    },
+    {
+      "command": "/plan",
+      "description": "Choose or continue a structured reading plan.",
+      "usage": "/plan",
+      "examples": [
+        "User: /plan → Bot: Reading plan choices or current day assignment."
+      ],
+      "notes": ""
+    },
+    {
+      "command": "/quiz",
+      "description": "Starts a short Bible quiz.",
+      "usage": "/quiz",
+      "examples": [
+        "User: /quiz → Bot: Quiz question with answer buttons."
+      ],
+      "notes": "Scores are saved when MongoDB is configured, or in memory for local fallback."
+    },
+    {
+      "command": "/ask",
+      "description": "Answers a Bible study question from built-in lesson content.",
+      "usage": "/ask <question>",
+      "examples": [
+        "User: /ask What does grace mean? → Bot: Relevant passage, short answer, explanation, and application."
+      ],
+      "notes": "This first version uses curated internal content, not an external AI model."
+    },
+    {
+      "command": "/bookmarks",
+      "description": "Lists or adds bookmarks.",
+      "usage": "/bookmarks or /bookmarks add <reference> | <note>",
+      "examples": [
+        "User: /bookmarks → Bot: Recent bookmarks.",
+        "User: /bookmarks add John 3:16 | God's love → Bot: Bookmark saved."
+      ],
+      "notes": ""
+    },
+    {
+      "command": "/reminder",
+      "description": "Sets or disables a daily study reminder.",
+      "usage": "/reminder HH:MM or /reminder off",
+      "examples": [
+        "User: /reminder 08:00 → Bot: Daily reminder set for 08:00.",
+        "User: /reminder off → Bot: Daily reminders are off."
+      ],
+      "notes": "The first version uses server local time."
+    },
+    {
+      "command": "/privacy",
+      "description": "Explains what data ScripturePath stores.",
+      "usage": "/privacy",
+      "examples": [
+        "User: /privacy → Bot: Privacy summary."
+      ],
+      "notes": ""
+    },
+    {
+      "command": "/resetdata",
+      "description": "Deletes saved user data after confirmation.",
+      "usage": "/resetdata",
+      "examples": [
+        "User: /resetdata → Bot: Confirmation button to delete data."
+      ],
+      "notes": "Deletes progress, bookmarks, reminders, quiz history, and study memory."
+    }
+  ],
+  "title": "ScripturePath"
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "name": "ask",
+    "file": "src/commands/ask.js"
+  },
+  {
+    "name": "bookmarks",
+    "file": "src/commands/bookmarks.js"
+  },
+  {
+    "name": "books",
+    "file": "src/commands/books.js"
+  },
+  {
+    "name": "daily",
+    "file": "src/commands/daily.js"
+  },
+  {
+    "name": "help",
+    "file": "src/commands/help.js"
+  },
+  {
+    "name": "plan",
+    "file": "src/commands/plan.js"
+  },
+  {
+    "name": "privacy",
+    "file": "src/commands/privacy.js"
+  },
+  {
+    "name": "quiz",
+    "file": "src/commands/quiz.js"
+  },
+  {
+    "name": "reminder",
+    "file": "src/commands/reminder.js"
+  },
+  {
+    "name": "resetdata",
+    "file": "src/commands/resetdata.js"
+  },
+  {
+    "name": "start",
+    "file": "src/commands/start.js"
+  },
+  {
+    "name": "topics",
+    "file": "src/commands/topics.js"
+  }
+]
